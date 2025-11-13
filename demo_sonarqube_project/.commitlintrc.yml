@@ -1,5 +1,0 @@
-rules:
-  header-match-pattern:
-    - 2
-    - always
-    - "^(feat|fix|chore|docs|refactor|test|ci|perf|build)(\(.+\))?: .{1,72}$"
