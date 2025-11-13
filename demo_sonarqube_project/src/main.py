@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-APP_NAME: str = 'demo_sonarqube'
+APP_NAME: str = "demo_sonarqube"
 
 app = FastAPI(title=APP_NAME)
 
@@ -18,11 +18,11 @@ def sumar(a: int, b: int) -> int:
     return a + b
 
 
-@app.get('/saludo')
+@app.get("/saludo")
 def saludo() -> dict:
     """Endpoint de ejemplo con saludo.
 
     Returns:
         dict: Mensaje de saludo.
     """
-    return {'msg': 'Hola, SonarQube!'}
+    return {"msg": "Hola, SonarQube!"}
