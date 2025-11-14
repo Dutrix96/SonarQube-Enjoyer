@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# Hook de COMMIT-MSG
+#Se ejecuta después del pre-commit, pero antes de que se guarde el mensaje.
+#Recibe 1 argumento: el path al fichero temporal que contiene el mensaje.
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(head -n1 $COMMIT_MSG_FILE)
+
+# Regex para "feat:", "fix:", "chore:", "docs:", "style:", "refactor:", "test:"
+REGEX="^(feat|fix|chore|docs|style|refactor|test): .+"
+
+if ! echo "$COMMIT_MSG" | grep -Eq "$REGEX"; then
+    echo "--------------------------------------------------------"
+    echo "⛔ ERROR: Formato de mensaje de commit inválido." >&2
+    echo "Tu mensaje: '$COMMIT_MSG'" >&2
+    echo "Debe seguir el formato: 'tipo: descripcion'" >&2
+    echo "Ej: 'feat: añadir login' o 'fix: corregir bug de registro'" >&2
+    echo "Tipos permitidos: feat, fix, chore, docs, style, refactor, test" >&2
+    echo "--------------------------------------------------------"
+    exit 1
+fi
+
+exit 0

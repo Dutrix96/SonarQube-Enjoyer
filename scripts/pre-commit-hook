@@ -1,0 +1,58 @@
+#!/bin/sh
+#
+# Hook de PRE-COMMIT
+# Se ejecuta antes de crear el commit.
+# Si este script falla (sale con 1), el commit se cancela.
+#
+
+echo "--- 🚀 Ejecutando hooks de pre-commit ---"
+
+# --- 1. Formateo (Black) ---
+echo "[1/3] Comprobando formateo con Black..."
+black --check .
+
+# $? contiene el código de salida del último comando
+if [ $? -ne 0 ]; then
+    echo "--------------------------------------------------------"
+    echo "⛔ ERROR: El código no está formateado."
+    echo "👉 Ejecuta 'black .' y añade los cambios antes de commitear."
+    echo "--------------------------------------------------------"
+    exit 1
+fi
+
+# --- 2. Tests (pytest) ---
+echo "[2/3] Ejecutando tests con pytest..."
+pytest
+
+if [ $? -ne 0 ]; then
+    echo "--------------------------------------------------------"
+    echo "⛔ ERROR: Los tests han fallado."
+    echo "👉 Arregla los tests antes de commitear."
+    echo "--------------------------------------------------------"
+    exit 1
+fi
+
+# --- 3. Archivos grandes (p.ej. > 1MB) ---
+echo "[3/3] Comprobando archivos grandes (>1MB)..."
+MAX_SIZE=1048576 # 1MB en bytes
+
+# Itera solo sobre archivos AÑADIDOS (A) o MODIFICADOS (M) que están en el "staging area"
+for file in $(git diff --cached --name-only --diff-filter=AM); do
+    
+    # Comprueba si el archivo existe en el disco
+    if [ -f "$file" ]; then
+        # Obtiene el tamaño del archivo
+        FILE_SIZE=$(wc -c < "$file")
+        
+        if [ $FILE_SIZE -gt $MAX_SIZE ]; then
+            echo "--------------------------------------------------------"
+            echo "⛔ ERROR: El fichero '$file' es demasiado grande ($FILE_SIZE bytes)."
+            echo "👉 Límite: 1MB. No se deben subir archivos tan grandes al repositorio."
+            echo "--------------------------------------------------------"
+            exit 1
+        fi
+    fi
+done
+
+echo "--- ✅ ¡Todo correcto! Creando commit... ---"
+exit 0
