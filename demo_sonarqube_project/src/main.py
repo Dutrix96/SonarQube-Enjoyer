@@ -6,23 +6,23 @@ app = FastAPI(title=APP_NAME)
 
 
 def sumar(a: int, b: int) -> int:
-    """Suma dos números enteros.
+    """Suma dos variables que entren por parametros
 
     Args:
-        a (int): Primer número.
-        b (int): Segundo número.
+        a (int): primer numero
+        b (int): segundo numero
 
     Returns:
-        int: Resultado de la suma.
+        int: Devuelve la suma de ambos
     """
     return a + b
 
 
 @app.get("/saludo")
 def saludo() -> dict:
-    """Endpoint de ejemplo con saludo.
+    """Crea un saludo en JSON con el mensaje que queramos
 
     Returns:
-        dict: Mensaje de saludo.
+        dict: devuelve un objeto JSON con el mensaje en particular
     """
     return {"msg": "Hola, SonarQube!"}
