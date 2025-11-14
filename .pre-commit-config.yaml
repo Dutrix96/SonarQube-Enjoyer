@@ -1,0 +1,41 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: detect-private-key
+      - id: check-added-large-files
+        args: ["--maxkb=5120"]
+
+  - repo: local
+    hooks:
+      - id: pytest
+        name: Run pytest (with coverage)
+        language: python
+        additional_dependencies:
+          - pytest==8.3.3
+          - pytest-cov==5.0.0
+          - fastapi==0.115.2
+          - uvicorn==0.32.0
+        entry: pytest --cov=demo_sonarqube_project/src --cov-report=xml:demo_sonarqube_project/coverage.xml -q
+        pass_filenames: false
+        stages: [pre-commit]
